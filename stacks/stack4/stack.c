@@ -1,69 +1,116 @@
+/* https://www.acmicpc.net/problem/2504 */
+
 #include<stdio.h>
 #include<string.h>
 
-int checkPS(int depth, char * str);
-int checkSB(int depth, char * str);
-
+void push(int * stack, int * i, int token);
+int pop(int * stack, int * i);
 
 int main()
 {
 	char buffer[32];
+	int stack[64];
+	int top = -1;
+	int result = 0;
 	fgets(buffer, sizeof(buffer)-1, stdin);
-
+	printf("%d\n",strlen(buffer));
 	for (int i = 0; i < strlen(buffer); ++i)
 	{
-		printf("%c", buffer[i]);
+
+		char token = buffer[i];
+
+		if(token == '(' || token == '[')
+		{
+			push(stack, &top, -token);
+		}
+		else if (token == ')' && top > -1)
+		{
+			int tkn = -pop(stack, &top);
+			int value = 0;
+
+			while(tkn != '(')
+			{
+				int num = -tkn;
+				if (num < 0 || tkn == 0)
+				{
+					printf("0\n");
+					return 0;
+				}
+				value += num;
+				tkn = -pop(stack, &top);
+			}
+			value = (value == 0 ? 1 : value);
+			push(stack, &top, value * 2);
+		}
+		else if (token == ']' && top > -1)
+		{
+			int tkn= -pop(stack, &top);
+			int value = 0;
+		
+			while(tkn != '[')
+			{
+				int num = -tkn;
+				if (num < 0 || tkn == 0)
+				{
+					printf("0\n");
+					return 0;
+				}
+				value += num;
+				tkn = -pop(stack, &top);
+			}
+
+			value = (value == 0 ? 1 : value);
+			push(stack, &top, value * 3);
+		}
+		else
+		{
+			printf("0\n");
+			return 0;
+		}
 	}
 
+	while(top != -1)
+	{
+		int temp = pop(stack, &top);
+		if (temp < 0)
+		{
+			printf("0\n");
+			return 0;
+		}
+		result+=temp;
+	}
+	printf("%d\n", result);
 	return 0;
 }
 
-int checkPS(int depth, char * str)
+void push(int * stack, int * i, int token)
 {
-	if (depth<0)
+	if (token < 0)
 	{
-		return 1;
-	}
-
-
-	if (*str == '(')
-	{
-		return checkPS(depth + 1, str+1);
-	} 
-	else if (*str == ')')
-	{
-		return checkPS(depth - 1, str+1);
+		printf("%c push \n", -token);
 	}
 	else
 	{
-		if (depth != 0)
-			return 1;
+		printf("%d push \n", token);
 	}
-	return 0;
-
+	
+	++*i;
+	stack[*i] = token;
+	
 }
-
-int checkSB(int depth, char * str)
+int pop(int * stack, int * i)
 {
-	if (depth<0)
+	if(*i < 0) return 0;
+	int temp = stack[*i];
+	if (temp < 0)
 	{
-		return 1;
-	}
-
-
-	if (*str == '(')
-	{
-		return checkPS(depth + 1, str+1);
-	} 
-	else if (*str == ')')
-	{
-		return checkPS(depth - 1, str+1);
+		printf("%c pop \n", -temp);
 	}
 	else
 	{
-		if (depth != 0)
-			return 1;
+		printf("%d pop \n", temp);
 	}
-	return 0;
 
+	--*i;
+	return stack[*i + 1];
 }

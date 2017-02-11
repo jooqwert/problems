@@ -1,4 +1,4 @@
-/* https://www.acmicpc.net/problem/10828 */
+/* https://www.acmicpc.net/problem/10845 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

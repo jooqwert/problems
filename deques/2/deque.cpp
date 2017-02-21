@@ -35,6 +35,7 @@ int main(int argc, char const *argv[])
 				++cnt;
 			}
 			result+= dq.size() - cnt > cnt ? cnt : dq.size() - cnt;
+			dq.pop_front();
 		}
 	}
 	printf("%d\n", result);

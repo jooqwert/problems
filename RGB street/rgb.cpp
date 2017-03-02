@@ -29,7 +29,14 @@ int main(int argc, char const *argv[])
 
 	}
 	
+
 	printf("%d\n", min(min(total_cost[L-1][0], total_cost[L-1][1]), total_cost[L-1][2]));
+
+	for (int i = 0; i < L; ++i)
+	{
+		free(total_cost[i]);
+	}
+	free(total_cost);
 
 
 	return 0;
